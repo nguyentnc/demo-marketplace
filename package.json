@@ -15,7 +15,7 @@
     "@hookform/error-message": "^2.0.1",
     "@reduxjs/toolkit": "^2.3.0",
     "@tanstack/react-query": "^5.61.0",
-    "axios": "^1.4.0",
+    "axios": "^1.7.7",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",

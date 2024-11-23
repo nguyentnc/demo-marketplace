@@ -1,18 +1,19 @@
-import type { NextConfig } from "next";
-import webpack from "webpack";
+import type { NextConfig } from 'next';
+import webpack from 'webpack';
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
   /* config options here */
   webpack: (config, { defaultLoaders, dev, buildId }) => {
     config.module.rules.push({
       test: /\.svg$/,
       issuer: /\.(js|ts)x?$/,
-      use: [{ loader: "@svgr/webpack", options: { icon: true } }],
+      use: [{ loader: '@svgr/webpack', options: { icon: true } }],
     });
 
     config.plugins.push(
       new webpack.DefinePlugin({
-        "process.env.CONFIG_BUILD_ID": JSON.stringify(buildId),
+        'process.env.CONFIG_BUILD_ID': JSON.stringify(buildId),
       })
     );
 
