@@ -1,9 +1,5 @@
 "use client";
-import {
-  createThirdWeb,
-  THIRDWEB_PROJECT_ID,
-  walletsThirdWeb,
-} from "@/services/thirdweb";
+import { clientThirdWeb, walletsThirdWeb } from "@/services/thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { ConnectButton as ConnectButtonThird } from "thirdweb/react";
 type Props = {};
@@ -11,7 +7,7 @@ type Props = {};
 export function ConnectButton({}: Props) {
   return (
     <ConnectButtonThird
-      client={createThirdWeb}
+      client={clientThirdWeb}
       appMetadata={{
         name: "Calm Down Marketplace",
         url: "https://dagora.xyz/",
@@ -25,9 +21,6 @@ export function ConnectButton({}: Props) {
         style: {
           minWidth: 150,
         },
-      }}
-      walletConnect={{
-        projectId: THIRDWEB_PROJECT_ID,
       }}
       autoConnect
     />

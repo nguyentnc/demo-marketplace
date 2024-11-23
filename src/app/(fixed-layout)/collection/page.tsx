@@ -1,4 +1,4 @@
-import Collection from "@/containers/Collection";
+import { Collection } from "@/containers/Collection";
 
 type Props = {};
 

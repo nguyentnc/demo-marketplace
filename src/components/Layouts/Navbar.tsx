@@ -1,5 +1,5 @@
-import cn from 'classnames';
-import Link from '../Base/Link';
+import cn from "classnames";
+import Link from "../Base/Link";
 
 type Props = {
   isContrast?: boolean;
@@ -10,20 +10,22 @@ export function Navbar({ isContrast, className }: Props) {
   return (
     <div
       className={cn(
-        'flex flex-1 justify-start space-x-4 font-semibold ',
+        "flex flex-1 justify-start space-x-4 font-semibold ",
         {
-          'text-white': !isContrast,
+          "text-white": !isContrast,
         },
         className
-      )}>
+      )}
+    >
       {/* <Link href='/explore' className='px-3 py-2 hover:text-theme-palette-5'>
         Explore
-      </Link>
-      <Link href='/collection' className='px-3 py-2 hover:text-theme-palette-5'>
-        Collection
       </Link> */}
-      <Link href='/inventory' className='px-3 py-2 hover:text-theme-palette-5'>
+      <Link href="/inventory" className="px-3 py-2 hover:text-theme-palette-5">
         Inventory
+      </Link>
+
+      <Link href="/collection" className="px-3 py-2 hover:text-theme-palette-5">
+        Mint NFT
       </Link>
     </div>
   );

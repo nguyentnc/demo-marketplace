@@ -24,8 +24,8 @@ const AppProviders: FC<AppProps> = (props) => {
   return (
     <ReduxProvide store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <QueryClientProvider client={queryClient}>
-          <ThirdwebProvider>
+        <ThirdwebProvider>
+          <QueryClientProvider client={queryClient}>
             <AppLogicProvider>{props.children}</AppLogicProvider>
             <Toaster
               containerStyle={{
@@ -48,8 +48,8 @@ const AppProviders: FC<AppProps> = (props) => {
               }}
               position='bottom-center'
             /> */}
-          </ThirdwebProvider>
-        </QueryClientProvider>
+          </QueryClientProvider>
+        </ThirdwebProvider>
       </PersistGate>
     </ReduxProvide>
   );
