@@ -1,34 +1,24 @@
-import type { Metadata } from 'next';
-import localFont from 'next/font/local';
-import './globals.css';
-import { ThirdwebProvider } from 'thirdweb/react';
+import type { Metadata } from "next";
+import AppProviders from "./app-providers";
+import "./globals.css";
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-});
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-});
+import RootLayoutCtn from "@/layouts/RootLayout";
 
 export const metadata: Metadata = {
-  title: 'Calm Down Marketplace',
-  description: 'From Calm Down team with love',
+  title: process.env.NEXT_PUBLIC_APP_NAME,
+  description: "Demo Marketplace",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+  appleWebApp: true,
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThirdwebProvider>{children}</ThirdwebProvider>
-      </body>
-    </html>
+    <RootLayoutCtn>
+      <AppProviders>{children}</AppProviders>
+    </RootLayoutCtn>
   );
 }

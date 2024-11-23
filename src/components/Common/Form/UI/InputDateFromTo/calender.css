@@ -1,0 +1,4 @@
+.filter-calender {
+  display: flex;
+  @apply !flex  overflow-hidden border-none shadow-card;
+}
