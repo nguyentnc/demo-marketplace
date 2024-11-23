@@ -14,10 +14,12 @@ const NFTCard = ({
   account,
   isListed,
   listingData,
+  onBuySuccess,
 }: {
   nft: NFT;
   account?: Account;
   isListed?: boolean;
+  onBuySuccess?: () => void;
   listingData?: {
     id: number;
     price: number;
@@ -80,6 +82,7 @@ const NFTCard = ({
     }
   };
 
+  // Listing
   const listingNFT = async () => {
     if (!account) {
       return;
@@ -87,7 +90,7 @@ const NFTCard = ({
 
     try {
       setIsListing(true);
-      // await approveNFT();
+      await approveNFT();
 
       console.log('Listing NFT...');
 
@@ -99,7 +102,7 @@ const NFTCard = ({
         contract: marketplaceContract,
         method:
           'function createListing((address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint128 startTimestamp, uint128 endTimestamp, bool reserved) _params) returns (uint256 listingId)',
-        gas: BigInt(500_000),
+        extraGas: BigInt(500_000),
         params: [
           {
             assetContract: collectionContract.address,
@@ -146,6 +149,7 @@ const NFTCard = ({
     }
   };
 
+  // Buy
   const buyNFT = async () => {
     if (!account || !listingData) {
       return;
@@ -160,6 +164,7 @@ const NFTCard = ({
         contract: marketplaceContract,
         method:
           'function buyFromListing(uint256 _listingId, address _buyFor, uint256 _quantity, address _currency, uint256 _expectedTotalPrice) payable',
+        extraGas: BigInt(500_000),
         params: [
           BigInt(listingData.id),
           account?.address || '',
@@ -173,10 +178,11 @@ const NFTCard = ({
         account,
         transaction,
       });
-
       console.log({
         buyHash: res.transactionHash,
       });
+
+      onBuySuccess?.();
     } catch (error) {
       console.error(error);
     } finally {
@@ -184,6 +190,7 @@ const NFTCard = ({
     }
   };
 
+  // Offer
   const createOffer = async () => {
     if (!account) {
       return;
@@ -193,7 +200,7 @@ const NFTCard = ({
       setIsListing(true);
       await approveToken();
 
-      console.log('Listing NFT...');
+      console.log('Making offer NFT...');
 
       const expirationTimestamp = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
       const offerPrice = '500000000000000000';
@@ -202,7 +209,7 @@ const NFTCard = ({
         contract: marketplaceContract,
         method:
           'function makeOffer((address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 totalPrice, uint256 expirationTimestamp) _params) returns (uint256 _offerId)',
-        gas: BigInt(500_000),
+        extraGas: BigInt(500_000),
         params: [
           {
             assetContract: collectionContract.address,
@@ -228,6 +235,38 @@ const NFTCard = ({
     }
   };
 
+  const acceptOffer = async () => {
+    if (!account) {
+      return;
+    }
+
+    try {
+      setIsListing(true);
+      console.log('Accepting offer NFT...');
+
+      const transaction = prepareContractCall({
+        contract: marketplaceContract,
+        method: 'function acceptOffer(uint256 _offerId)',
+        params: [BigInt(0)],
+      });
+
+      const res = await sendAndConfirmTransaction({
+        account,
+        transaction,
+      });
+
+      onBuySuccess?.();
+
+      console.log({
+        acceptOfferHash: res.transactionHash,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsListing(false);
+    }
+  };
+
   return (
     <NFTProvider contract={collectionContract} tokenId={nft.id}>
       <div className='aspect-square'>
@@ -245,14 +284,22 @@ const NFTCard = ({
         </div>
       )}
 
+      {isOwner && account && isListed && (
+        <div className='mt-2'>
+          <Button isDisabled={isListing} size='sm' onClick={acceptOffer}>
+            Accept Offer
+          </Button>
+        </div>
+      )}
+
       {!isOwner && account && isListed && (
         <div className='mt-2 space-x-2'>
           <Button isDisabled={isListing} size='sm' onClick={buyNFT}>
             Buy
           </Button>
 
-          <Button size='sm' onClick={createOffer}>
-            {isOwner ? 'Accept Offer' : 'Make Offer'}
+          <Button size='sm' isDisabled={isListing} onClick={createOffer}>
+            Make Offer
           </Button>
         </div>
       )}

@@ -4,21 +4,6 @@ import { axiosInstance } from '@/configs/apis.config';
 import { useEffect, useState } from 'react';
 import { useActiveAccount } from 'thirdweb/react';
 
-const nfts = [
-  {
-    id: BigInt(1),
-    signature: 2,
-    metadata: {
-      name: 'Nizzy',
-      description: 'The NFT of Nizzy',
-      image: 'https://inventory.coin98.com/images/nftvisual-sg1ci5zX8FFQvy5m.png',
-    },
-    owner: '0xaA1E3A9591a80b2Cd9D475a9928640a86541e72c',
-    tokenURI: 'ipfs://QmeqaT8yQmSWLMp7JRLiTDqKeUJjMXyLXyE23PAd63xtGv/0',
-    type: 'ERC721',
-  },
-];
-
 export function Home() {
   const account = useActiveAccount();
   const [nfts, setNFTs] = useState<any[]>([]);
@@ -30,8 +15,12 @@ export function Home() {
 
   const fetchNFTs = async () => {
     const nftsResponse = await axiosInstance.get('/listing');
-    console.log('fetchNFTs ~ nftsResponse:', nftsResponse);
     setNFTs(nftsResponse.data);
+  };
+
+  const onBuySuccess = async (id: string) => {
+    await axiosInstance.delete(`/listing/delete/${id}`);
+    await fetchNFTs();
   };
 
   return (
@@ -45,6 +34,7 @@ export function Home() {
                 nft={nft.nft as any}
                 account={account}
                 isListed
+                onBuySuccess={() => onBuySuccess(nft._id)}
                 listingData={{ id: nft.signature, price: nft.price }}
               />
             </div>
