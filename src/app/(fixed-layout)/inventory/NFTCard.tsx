@@ -103,9 +103,6 @@ const NFTCard = ({
     try {
       setIsListing(true);
       await approveNFT();
-
-      console.log("Listing NFT...");
-
       const startTime = Math.floor(Date.now() / 1000);
       const endTime = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
       const price = "1000000000000000000";
@@ -134,13 +131,6 @@ const NFTCard = ({
         transaction,
       });
       const listingId = hexToNumber(res?.logs[0]?.topics[2] || "0x");
-
-      console.log({
-        listingHash: res.transactionHash,
-        listingId,
-      });
-
-      console.log({ nft });
 
       await axiosInstance.post("/listing", {
         signature: listingId,
