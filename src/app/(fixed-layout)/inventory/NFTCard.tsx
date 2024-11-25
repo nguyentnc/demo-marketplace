@@ -147,8 +147,6 @@ const NFTCard = ({
         listingId,
       });
 
-      console.log({ nft });
-
       await axiosInstance.post('/listing', {
         signature: listingId,
         startTime,

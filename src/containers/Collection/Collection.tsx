@@ -11,6 +11,8 @@ import { get } from 'lodash';
 import { useForm } from 'react-hook-form';
 import { useActiveAccount, useSendAndConfirmTransaction } from 'thirdweb/react';
 import useCollectionInfo from './useCollectionInfo';
+import axios from 'axios';
+import { hexToNumber } from 'thirdweb';
 
 type Props = {};
 
@@ -27,9 +29,8 @@ export function Collection({}: Props) {
 
   const methods = useForm<TFormData>({
     defaultValues: {
-      name: '',
-      description: '',
-      image: 'https://inventory.coin98.com/images/nftvisual-sg1ci5zX8FFQvy5m.png',
+      name: 'NFT Name',
+      description: 'Lorem ipsum dolor sit.',
     },
   });
   const {
@@ -44,21 +45,24 @@ export function Collection({}: Props) {
       if (!activeAccount) {
         return;
       }
+      const picsumImage = (await axios.get('https://picsum.photos/500')).request.responseURL;
 
       const transaction = mintTo({
         contract: contractCollection,
         to: activeAccount?.address,
-        nft: data,
+        nft: { ...data, image: picsumImage },
       });
 
       const receipt = await sendTransaction(transaction);
+      const tokenId = hexToNumber(receipt?.logs[0]?.data || '0x');
+      console.log('🚀 ~ onSubmit ~ tokenId:', tokenId);
 
       if (!receipt) {
         throw new Error('Transaction failed');
       }
 
-      console.log('🚀 ~ onSubmit ~ receipt:', receipt);
       toast.success('NFT minted successfully');
+
       reset();
     } catch (error) {
       toast.error(get(error, 'message', 'An error occurred'));
@@ -91,19 +95,6 @@ export function Collection({}: Props) {
               label='Description'
               rules={{
                 required: 'Description is required',
-              }}
-            />
-            <FormInput
-              name='image'
-              label='Image URL'
-              rules={{
-                required: 'Image URL is required',
-                validate: {
-                  validateUrl: (value: string) =>
-                    /^(https?|chrome):\/\/[^\s$.?#].[^\s]*\.(jpg|jpeg|png|gif|bmp|webp)$/.test(
-                      value
-                    ) || 'Invalid image URL format',
-                },
               }}
             />
           </div>
