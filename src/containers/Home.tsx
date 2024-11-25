@@ -2,7 +2,7 @@
 import NFTCard from '@/app/(fixed-layout)/inventory/NFTCard';
 import { axiosInstance } from '@/configs/apis.config';
 import { useEffect, useState } from 'react';
-import { useActiveAccount } from 'thirdweb/react';
+import { useActiveAccount, useActiveWalletChain } from 'thirdweb/react';
 
 export function Home() {
   const account = useActiveAccount();
@@ -35,7 +35,11 @@ export function Home() {
                 account={account}
                 isListed
                 onBuySuccess={() => onBuySuccess(nft._id)}
-                listingData={{ id: nft.signature, price: nft.price }}
+                listingData={{
+                  id: nft.signature,
+                  price: nft.price,
+                  tokenAddress: nft.tokenListingAddress,
+                }}
               />
             </div>
           );
