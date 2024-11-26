@@ -113,7 +113,7 @@ const NFTCard = ({
 
       console.log('Listing NFT...');
 
-      const startTime = Math.floor(Date.now() / 1000);
+      const startTime = Math.floor(Date.now() / 1000) - 3600;
       const endTime = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
       const price = '1000000000000000000';
 
@@ -121,7 +121,7 @@ const NFTCard = ({
         contract: marketplaceContract,
         method:
           'function createListing((address assetContract, uint256 tokenId, uint256 quantity, address currency, uint256 pricePerToken, uint128 startTimestamp, uint128 endTimestamp, bool reserved) _params) returns (uint256 listingId)',
-        extraGas: BigInt(500_000),
+        extraGas: BigInt(1_000_000),
         params: [
           {
             assetContract: collectionContract.address,
@@ -182,7 +182,7 @@ const NFTCard = ({
         contract: marketplaceContract,
         method:
           'function buyFromListing(uint256 _listingId, address _buyFor, uint256 _quantity, address _currency, uint256 _expectedTotalPrice) payable',
-        extraGas: BigInt(500_000),
+        extraGas: BigInt(1_000_000),
         params: [
           BigInt(listingData.id),
           account?.address || '',
