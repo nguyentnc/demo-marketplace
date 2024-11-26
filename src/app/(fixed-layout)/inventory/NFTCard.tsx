@@ -265,7 +265,7 @@ const NFTCard = ({
       const transaction = prepareContractCall({
         contract: marketplaceContract,
         method: 'function acceptOffer(uint256 _offerId)',
-        params: [BigInt(0)],
+        params: [BigInt(1)],
       });
 
       const res = await sendAndConfirmTransaction({
